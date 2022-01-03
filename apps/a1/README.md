@@ -29,6 +29,7 @@ No resources.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_l2lenght"></a> [l2lenght](#output\_l2lenght) | l2 length |
 | <a name="output_pet1"></a> [pet1](#output\_pet1) | pet1 |
 | <a name="output_pet2"></a> [pet2](#output\_pet2) | pet2 |
 <!-- END_TF_DOCS -->

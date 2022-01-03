@@ -15,7 +15,22 @@ export default async function (host: Tree, schema: any) {
     root: `${getWorkspaceLayout(host).libsDir}/${schema.name}`,
     projectType: 'library',
     sourceRoot: `${getWorkspaceLayout(host).libsDir}/${schema.name}`,
-    targets: {},
+    targets: {
+      'pre-commit': {
+        'executor': '@nrwl/workspace:run-commands',
+        'options': {
+          'commands': [
+            'tfenv use',
+            'terraform fmt -recursive',
+            'tflint',
+            'tfsec',
+            'terraform-docs markdown table --output-file README.md --output-mode inject .'
+          ],
+          'cwd': `${getWorkspaceLayout(host).libsDir}/${schema.name}`,
+          'parallel': false
+        }
+      }
+    },
     tags: null,
   };
 

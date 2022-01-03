@@ -18,7 +18,8 @@
               "tfsec",
               "terraform-docs markdown table --output-file README.md --output-mode inject ."
             ],
-            "cwd": "apps/a1"
+            "cwd": "apps/a1",
+            "parallel": false
           }
         },
         "plan": {
@@ -29,7 +30,44 @@
               "terraform init",
               "terraform plan --out=a1.tfplan"
             ],
-            "cwd": "apps/a1"
+            "cwd": "apps/a1",
+            "parallel": false
+          }
+        }
+      },
+      "tags": null
+    },
+    "a2": {
+      "root": "apps/a2",
+      "projectType": "application",
+      "sourceRoot": "apps/a2",
+      "targets": {
+        "pre-commit": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              "tfenv use",
+              "terraform init -backend=false",
+              "terraform validate",
+              "terraform fmt -recursive",
+              "tflint",
+              "tfsec",
+              "terraform-docs markdown table --output-file README.md --output-mode inject ."
+            ],
+            "cwd": "apps/a2",
+            "parallel": false
+          }
+        },
+        "plan": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              "tfenv use",
+              "terraform init",
+              "terraform plan --out=a2.tfplan"
+            ],
+            "cwd": "apps/a2",
+            "parallel": false
           }
         }
       },
@@ -50,7 +88,8 @@
               "tfsec",
               "terraform-docs markdown table --output-file README.md --output-mode inject ."
             ],
-            "cwd": "libs/l1"
+            "cwd": "libs/l1",
+            "parallel": false
           }
         }
       },
@@ -71,7 +110,30 @@
               "tfsec",
               "terraform-docs markdown table --output-file README.md --output-mode inject ."
             ],
-            "cwd": "libs/l2"
+            "cwd": "libs/l2",
+            "parallel": false
+          }
+        }
+      },
+      "tags": null
+    },
+    "l3": {
+      "root": "libs/l3",
+      "projectType": "library",
+      "sourceRoot": "libs/l3",
+      "targets": {
+        "pre-commit": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              "tfenv use",
+              "terraform fmt -recursive",
+              "tflint",
+              "tfsec",
+              "terraform-docs markdown table --output-file README.md --output-mode inject ."
+            ],
+            "cwd": "libs/l3",
+            "parallel": false
           }
         }
       },
