@@ -96,3 +96,4 @@ Visit [Nx Cloud](https://nx.app/) to learn more.
 `nx workspace-generator tf-app myapp`
 `nx workspace-generator tf-lib mylib`
 `nx dep-graph`
+`https://gitpod.io/#https://github.com/Vittitow/gitpod-nx-tf`
