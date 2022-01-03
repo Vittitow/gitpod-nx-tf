@@ -1,9 +1,3 @@
-# a1
-
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-README.md updated successfully
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
@@ -26,9 +20,15 @@ No resources.
 
 ## Inputs
 
-No inputs.
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_length1"></a> [length1](#input\_length1) | length1 | `number` | `1` | no |
+| <a name="input_length2"></a> [length2](#input\_length2) | length2 | `number` | `1` | no |
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_pet1"></a> [pet1](#output\_pet1) | pet1 |
+| <a name="output_pet2"></a> [pet2](#output\_pet2) | pet2 |
 <!-- END_TF_DOCS -->

@@ -5,21 +5,76 @@
       "root": "apps/a1",
       "projectType": "application",
       "sourceRoot": "apps/a1",
-      "targets": {},
+      "targets": {
+        "pre-commit": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              "tfenv use",
+              "terraform init -backend=false",
+              "terraform validate",
+              "terraform fmt -recursive",
+              "tflint",
+              "tfsec",
+              "terraform-docs markdown table --output-file README.md --output-mode inject ."
+            ],
+            "cwd": "apps/a1"
+          }
+        },
+        "plan": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              "tfenv use",
+              "terraform init",
+              "terraform plan --out=a1.tfplan"
+            ],
+            "cwd": "apps/a1"
+          }
+        }
+      },
       "tags": null
     },
     "l1": {
       "root": "libs/l1",
       "projectType": "library",
       "sourceRoot": "libs/l1",
-      "targets": {},
+      "targets": {
+        "pre-commit": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              "tfenv use",
+              "terraform fmt -recursive",
+              "tflint",
+              "tfsec",
+              "terraform-docs markdown table --output-file README.md --output-mode inject ."
+            ],
+            "cwd": "libs/l1"
+          }
+        }
+      },
       "tags": null
     },
     "l2": {
       "root": "libs/l2",
       "projectType": "library",
       "sourceRoot": "libs/l2",
-      "targets": {},
+      "targets": {
+        "pre-commit": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              "tfenv use",
+              "terraform fmt -recursive",
+              "tflint",
+              "tfsec",
+              "terraform-docs markdown table --output-file README.md --output-mode inject ."
+            ],
+            "cwd": "libs/l2"
+          }
+        }
+      },
       "tags": null
     }
   }
