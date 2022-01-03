@@ -9,7 +9,9 @@ No providers.
 
 ## Modules
 
-No modules.
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_a1"></a> [a1](#module\_a1) | ../../apps/a1 | n/a |
 
 ## Resources
 
