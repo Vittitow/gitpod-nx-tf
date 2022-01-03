@@ -1,4 +1,26 @@
 {
   "version": 2,
-  "projects": {}
+  "projects": {
+    "a1": {
+      "root": "apps/a1",
+      "projectType": "application",
+      "sourceRoot": "apps/a1",
+      "targets": {},
+      "tags": null
+    },
+    "l1": {
+      "root": "libs/l1",
+      "projectType": "library",
+      "sourceRoot": "libs/l1",
+      "targets": {},
+      "tags": null
+    },
+    "l2": {
+      "root": "libs/l2",
+      "projectType": "library",
+      "sourceRoot": "libs/l2",
+      "targets": {},
+      "tags": null
+    }
+  }
 }

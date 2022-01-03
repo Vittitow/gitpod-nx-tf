@@ -26,3 +26,5 @@ vscode:
     - golang.go
     - hashicorp.terraform
     - nrwl.angular-console
+    - esbenp.prettier-vscode
+    - eamodio.gitlens
