@@ -29,5 +29,6 @@ No modules.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_length"></a> [length](#output\_length) | n/a |
 | <a name="output_pet"></a> [pet](#output\_pet) | n/a |
 <!-- END_TF_DOCS -->
