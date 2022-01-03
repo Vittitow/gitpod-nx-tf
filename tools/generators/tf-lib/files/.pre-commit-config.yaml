@@ -1,0 +1,12 @@
+repos:
+- repo: https://github.com/antonbabenko/pre-commit-terraform
+  rev: v1.62.3 # Get the latest from: https://github.com/antonbabenko/pre-commit-terraform/releases
+  hooks:
+    - id: terraform_fmt
+      args:
+        - --args=-recursive
+    - id: terraform_tflint
+    - id: terraform_docs
+      args:
+        - --hook-config=--create-file-if-not-exist=true
+    - id: terraform_tfsec
