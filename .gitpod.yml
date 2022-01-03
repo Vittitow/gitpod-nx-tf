@@ -1,4 +1,5 @@
 # Learn more about this file at https://www.gitpod.io/docs/references/gitpod-yml
+image: public.ecr.aws/vlaaaaaaad/gitpod-terraform:latest
 tasks:
   - init: npm i -g @nrwl/cli commitizen && npm i
 ports:
@@ -20,3 +21,8 @@ github:
     addComment: false
     # add a "Review in Gitpod" button to the pull request's description (defaults to false)
     addBadge: true
+vscode:
+  extensions:
+    - golang.go
+    - hashicorp.terraform
+    - nrwl.angular-console
