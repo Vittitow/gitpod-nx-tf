@@ -99,6 +99,42 @@
       },
       "tags": null
     },
+    "a3": {
+      "root": "apps/a3",
+      "projectType": "application",
+      "sourceRoot": "apps/a3",
+      "targets": {
+        "pre-commit": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              "tfenv use",
+              "terraform init -backend=false",
+              "terraform validate",
+              "terraform fmt -recursive",
+              "tflint",
+              "tfsec",
+              "terraform-docs markdown table --output-file README.md --output-mode inject ."
+            ],
+            "cwd": "apps/a3",
+            "parallel": false
+          }
+        },
+        "plan": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              "tfenv use",
+              "terraform init",
+              "terraform plan --out=a3.tfplan"
+            ],
+            "cwd": "apps/a3",
+            "parallel": false
+          }
+        }
+      },
+      "tags": null
+    },
     "l1": {
       "root": "libs/l1",
       "projectType": "library",
