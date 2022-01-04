@@ -69,6 +69,32 @@
             "cwd": "apps/a2",
             "parallel": false
           }
+        },
+        "plan:sandbox": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              "tfenv use",
+              "terraform init",
+              "terraform plan --out=a2.sandbox.tfplan"
+            ],
+            "cwd": "apps/a2",
+            "envFile": "apps/a2/env/sandbox/.sandbox.env",
+            "parallel": false
+          }
+        },
+        "plan:np": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              "tfenv use",
+              "terraform init",
+              "terraform plan --out=a2.np.tfplan"
+            ],
+            "cwd": "apps/a2",
+            "envFile": "apps/a2/env/np/.np.env",
+            "parallel": false
+          }
         }
       },
       "tags": null
