@@ -131,6 +131,12 @@
             "cwd": "apps/a3",
             "parallel": false
           }
+        },
+        "echo": {
+          "executor": "./tools/executors:tfplan",
+          "options": {
+            "textToEcho": "Hello World"
+          }
         }
       },
       "tags": null
