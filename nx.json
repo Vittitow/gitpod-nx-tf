@@ -28,6 +28,12 @@
         "target": "build",
         "projects": "dependencies"
       }
+    ],
+    "plan": [
+      {
+        "target": "build",
+        "projects": "self"
+      }
     ]
   }
 }

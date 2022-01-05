@@ -36,25 +36,49 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
+exports.LARGE_BUFFER = void 0;
+var devkit_1 = require("@nrwl/devkit");
 var child_process_1 = require("child_process");
-var util_1 = require("util");
+var fs_extra_1 = require("fs-extra");
+// import { promisify } from 'util';
+exports.LARGE_BUFFER = 1024 * 1000000;
 function echoExecutor(options, context) {
     return __awaiter(this, void 0, void 0, function () {
-        var _a, stdout, stderr, success;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0:
-                    console.info("Executing \"echo\"...");
-                    console.info("Options: " + JSON.stringify(options, null, 2));
-                    return [4 /*yield*/, (0, util_1.promisify)(child_process_1.exec)("echo " + options.textToEcho)];
-                case 1:
-                    _a = _b.sent(), stdout = _a.stdout, stderr = _a.stderr;
-                    console.log(stdout);
-                    console.error(stderr);
-                    success = !stderr;
-                    return [2 /*return*/, { success: success }];
+        var project, rootEnvPath, outputPath, envs, _i, envs_1, env, outputPath;
+        return __generator(this, function (_a) {
+            project = context.workspace.projects[context.projectName];
+            rootEnvPath = (0, devkit_1.joinPathFragments)(project.root, 'env');
+            if (options.env) {
+                outputPath = (0, devkit_1.joinPathFragments)('dist', project.root + "-" + options.env);
+                executePlan(outputPath);
             }
+            else if ((0, fs_extra_1.pathExistsSync)(rootEnvPath)) {
+                envs = (0, fs_extra_1.readdirSync)(rootEnvPath, { withFileTypes: true })
+                    .filter(function (file) { return file.isDirectory(); })
+                    .map(function (dir) { return dir.name; });
+                for (_i = 0, envs_1 = envs; _i < envs_1.length; _i++) {
+                    env = envs_1[_i];
+                    outputPath = (0, devkit_1.joinPathFragments)('dist', project.root + "-" + env);
+                    executePlan(outputPath);
+                }
+            }
+            return [2 /*return*/, { success: true }];
         });
     });
 }
 exports["default"] = echoExecutor;
+function executePlan(outputPath) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            if (!(0, fs_extra_1.pathExistsSync)(outputPath))
+                return [2 /*return*/];
+            (0, child_process_1.execSync)('tfenv use && terraform init && terraform plan --out=.tfplan', {
+                // env: {},
+                stdio: [0, 1, 2],
+                maxBuffer: exports.LARGE_BUFFER,
+                cwd: outputPath
+            });
+            return [2 /*return*/];
+        });
+    });
+}

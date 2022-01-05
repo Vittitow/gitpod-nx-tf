@@ -2,7 +2,6 @@ import { ExecutorContext, joinPathFragments } from '@nrwl/devkit';
 import { copySync, pathExistsSync, removeSync, readdirSync } from 'fs-extra';
 
 export interface ExecutorOptions {
-  outputPath?: string;
   env?: string;
 }
 
@@ -22,14 +21,19 @@ export default async function tfbuildExecutor(
     const rootEnvPath = joinPathFragments(project.root, 'env');
 
     if(options.env) {
+      
       const outputPath = joinPathFragments('dist', `${project.root}-${options.env}`);
       const envPath = joinPathFragments(rootEnvPath, options.env);
 
-      outputAssets(outputPath, project.root, envPath);
+      if(pathExistsSync(envPath)) {
+        outputAssets(outputPath, project.root, envPath);
+      }
+
     } else if (pathExistsSync(rootEnvPath)) {
+      
       const envs = readdirSync(rootEnvPath, { withFileTypes: true })
-      .filter(file => file.isDirectory())
-      .map(dir => dir.name);
+        .filter(file => file.isDirectory())
+        .map(dir => dir.name);
 
       for(let env of envs) {
         const outputPath = joinPathFragments('dist', `${project.root}-${env}`);
@@ -37,6 +41,7 @@ export default async function tfbuildExecutor(
 
         outputAssets(outputPath, project.root, envPath);
       }
+
     }
   }
 
@@ -44,10 +49,14 @@ export default async function tfbuildExecutor(
 }
 
 function outputAssets(outputPath: string, projPath: string, envPath?: string) {
-  removeSync(outputPath);
-  copySync(projPath, outputPath);
-  
   const outputRootEnvPath = joinPathFragments(outputPath, 'env');
+
+  removeSync(outputPath);
+
+  if (!pathExistsSync(projPath))
+    return;
+
+  copySync(projPath, outputPath);
 
   if(pathExistsSync(outputRootEnvPath)) {
     removeSync(outputRootEnvPath);

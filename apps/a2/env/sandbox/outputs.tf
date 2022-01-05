@@ -1,3 +1,3 @@
 output "name" {
-  
+  value = "test"
 }

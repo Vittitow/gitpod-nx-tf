@@ -59,16 +59,7 @@
           }
         },
         "plan": {
-          "executor": "@nrwl/workspace:run-commands",
-          "options": {
-            "commands": [
-              "tfenv use",
-              "terraform init",
-              "terraform plan --out=a2.tfplan"
-            ],
-            "cwd": "apps/a2",
-            "parallel": false
-          }
+          "executor": "./tools/executors:tfplan"
         },
         "plan:sandbox": {
           "executor": "@nrwl/workspace:run-commands",
