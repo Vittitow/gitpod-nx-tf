@@ -83,12 +83,9 @@
             "parallel": false
           }
         },
-        "build:sandbox": {
+        "build": {
           "executor": "./tools/executors:tfbuild",
           "options": {
-            "deleteOutputPath": "true",
-            "outputPath": "dist/apps/a2-sandbox",
-            "env": "sandbox"
           },
           "dependsOn": [{
             "target": "build",
@@ -175,6 +172,9 @@
             "cwd": "libs/l1",
             "parallel": false
           }
+        },
+        "build": {
+          "executor": "./tools/executors:tfbuild"
         }
       },
       "tags": null
@@ -221,11 +221,7 @@
           }
         },
         "build": {
-          "executor": "./tools/executors:tfbuild",
-          "options": {
-            "deleteOutputPath": "true",
-            "outputPath": "dist/libs/l3"
-          }
+          "executor": "./tools/executors:tfbuild"
         }
       },
       "tags": null

@@ -40,25 +40,45 @@ var devkit_1 = require("@nrwl/devkit");
 var fs_extra_1 = require("fs-extra");
 function tfbuildExecutor(options, context) {
     return __awaiter(this, void 0, void 0, function () {
-        var project, envDir, success;
+        var project, outputPath, rootEnvPath, outputPath, envPath, envs, _i, envs_1, env, outputPath, envPath;
         return __generator(this, function (_a) {
             project = context.workspace.projects[context.projectName];
-            if (options.deleteOutputPath) {
-                (0, fs_extra_1.emptyDirSync)(options.outputPath);
+            if (project.projectType === 'library') {
+                outputPath = (0, devkit_1.joinPathFragments)('dist', project.root);
+                outputAssets(outputPath, project.root);
             }
-            (0, fs_extra_1.copySync)(project.root, options.outputPath);
-            if (project.projectType == 'application' && options.env !== undefined) {
-                envDir = (0, devkit_1.joinPathFragments)(project.root, "env/" + options.env);
-                if ((0, fs_extra_1.pathExistsSync)(envDir)) {
-                    (0, fs_extra_1.copySync)(envDir, options.outputPath);
+            if (project.projectType == 'application') {
+                rootEnvPath = (0, devkit_1.joinPathFragments)(project.root, 'env');
+                if (options.env) {
+                    outputPath = (0, devkit_1.joinPathFragments)('dist', project.root + "-" + options.env);
+                    envPath = (0, devkit_1.joinPathFragments)(rootEnvPath, options.env);
+                    outputAssets(outputPath, project.root, envPath);
                 }
-                if ((0, fs_extra_1.pathExistsSync)((0, devkit_1.joinPathFragments)(options.outputPath, 'env'))) {
-                    (0, fs_extra_1.removeSync)((0, devkit_1.joinPathFragments)(options.outputPath, 'env'));
+                else if ((0, fs_extra_1.pathExistsSync)(rootEnvPath)) {
+                    envs = (0, fs_extra_1.readdirSync)(rootEnvPath, { withFileTypes: true })
+                        .filter(function (file) { return file.isDirectory(); })
+                        .map(function (dir) { return dir.name; });
+                    for (_i = 0, envs_1 = envs; _i < envs_1.length; _i++) {
+                        env = envs_1[_i];
+                        outputPath = (0, devkit_1.joinPathFragments)('dist', project.root + "-" + env);
+                        envPath = (0, devkit_1.joinPathFragments)(rootEnvPath, env);
+                        outputAssets(outputPath, project.root, envPath);
+                    }
                 }
             }
-            success = true;
-            return [2 /*return*/, { success: success }];
+            return [2 /*return*/, { success: true }];
         });
     });
 }
 exports["default"] = tfbuildExecutor;
+function outputAssets(outputPath, projPath, envPath) {
+    (0, fs_extra_1.removeSync)(outputPath);
+    (0, fs_extra_1.copySync)(projPath, outputPath);
+    var outputRootEnvPath = (0, devkit_1.joinPathFragments)(outputPath, 'env');
+    if ((0, fs_extra_1.pathExistsSync)(outputRootEnvPath)) {
+        (0, fs_extra_1.removeSync)(outputRootEnvPath);
+    }
+    if (envPath !== undefined && (0, fs_extra_1.pathExistsSync)(envPath)) {
+        (0, fs_extra_1.copySync)(envPath, outputPath);
+    }
+}

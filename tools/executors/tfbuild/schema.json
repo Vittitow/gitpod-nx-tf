@@ -3,9 +3,13 @@
   "type": "object",
   "cli": "nx",
   "properties": {
-    "textToEcho": {
-      "type": "string",
-      "description": "Text To Echo"
+    "outputPath": {
+      "description": "Allows you to specify where the build artifacts are stored. This allows Nx Cloud to pick them up correctly, in the case that the build artifacts are placed somewhere other than the top level dist folder.",
+      "type": "string"
+    },
+    "env": {
+      "description": "Name of the ",
+      "type": "string"
     }
   }
 }

@@ -1,30 +1,59 @@
 import { ExecutorContext, joinPathFragments } from '@nrwl/devkit';
-import { copySync, emptyDirSync, pathExistsSync, removeSync } from 'fs-extra';
+import { copySync, pathExistsSync, removeSync, readdirSync } from 'fs-extra';
+
+export interface ExecutorOptions {
+  outputPath?: string;
+  env?: string;
+}
 
 export default async function tfbuildExecutor(
-  options: any,
+  options: ExecutorOptions,
   context: ExecutorContext
 ) {
   const project = context.workspace.projects[context.projectName];
 
-  if (options.deleteOutputPath) {
-    emptyDirSync(options.outputPath);
+  if (project.projectType === 'library') {
+    const outputPath = joinPathFragments('dist', project.root);
+
+    outputAssets(outputPath, project.root);
   }
 
-  copySync(project.root, options.outputPath);
+  if (project.projectType == 'application') {
+    const rootEnvPath = joinPathFragments(project.root, 'env');
 
-  if (project.projectType == 'application' && options.env !== undefined) {
-    const envDir = joinPathFragments(project.root, `env/${options.env}`);
+    if(options.env) {
+      const outputPath = joinPathFragments('dist', `${project.root}-${options.env}`);
+      const envPath = joinPathFragments(rootEnvPath, options.env);
 
-    if (pathExistsSync(envDir)) {
-      copySync(envDir, options.outputPath);
-    }
+      outputAssets(outputPath, project.root, envPath);
+    } else if (pathExistsSync(rootEnvPath)) {
+      const envs = readdirSync(rootEnvPath, { withFileTypes: true })
+      .filter(file => file.isDirectory())
+      .map(dir => dir.name);
 
-    if (pathExistsSync(joinPathFragments(options.outputPath, 'env'))) {
-      removeSync(joinPathFragments(options.outputPath, 'env'));
+      for(let env of envs) {
+        const outputPath = joinPathFragments('dist', `${project.root}-${env}`);
+        const envPath = joinPathFragments(rootEnvPath, env);
+
+        outputAssets(outputPath, project.root, envPath);
+      }
     }
   }
 
-  const success = true;
-  return { success };
+  return { success: true };
+}
+
+function outputAssets(outputPath: string, projPath: string, envPath?: string) {
+  removeSync(outputPath);
+  copySync(projPath, outputPath);
+  
+  const outputRootEnvPath = joinPathFragments(outputPath, 'env');
+
+  if(pathExistsSync(outputRootEnvPath)) {
+    removeSync(outputRootEnvPath);
+  }
+
+  if(envPath !== undefined && pathExistsSync(envPath)) {
+    copySync(envPath, outputPath);
+  }
 }
