@@ -136,7 +136,11 @@
           "executor": "./tools/executors:tfplan",
           "options": {
             "textToEcho": "Hello World"
-          }
+          },
+          "dependsOn": [{
+            "target": "pre-commit",
+            "projects": "dependencies"
+          }]
         }
       },
       "tags": null
