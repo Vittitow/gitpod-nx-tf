@@ -83,6 +83,18 @@
             "parallel": false
           }
         },
+        "build:sandbox": {
+          "executor": "./tools/executors:tfbuild",
+          "options": {
+            "deleteOutputPath": "true",
+            "outputPath": "dist/apps/a2-sandbox",
+            "env": "sandbox"
+          },
+          "dependsOn": [{
+            "target": "build",
+            "projects": "dependencies"
+          }]
+        },
         "plan:np": {
           "executor": "@nrwl/workspace:run-commands",
           "options": {
@@ -133,7 +145,7 @@
           }
         },
         "echo": {
-          "executor": "./tools/executors:tfplan",
+          "executor": "./tools/executors:tfbuild",
           "options": {
             "textToEcho": "Hello World"
           },
@@ -206,6 +218,13 @@
             ],
             "cwd": "libs/l3",
             "parallel": false
+          }
+        },
+        "build": {
+          "executor": "./tools/executors:tfbuild",
+          "options": {
+            "deleteOutputPath": "true",
+            "outputPath": "dist/libs/l3"
           }
         }
       },
