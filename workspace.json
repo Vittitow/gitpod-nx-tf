@@ -76,12 +76,13 @@
         },
         "build": {
           "executor": "./tools/executors:tfbuild",
-          "options": {
-          },
-          "dependsOn": [{
-            "target": "build",
-            "projects": "dependencies"
-          }]
+          "options": {},
+          "dependsOn": [
+            {
+              "target": "build",
+              "projects": "dependencies"
+            }
+          ]
         },
         "plan:np": {
           "executor": "@nrwl/workspace:run-commands",
@@ -133,14 +134,10 @@
           }
         },
         "echo": {
-          "executor": "./tools/executors:tfbuild",
+          "executor": "./tools/executors:terraform-plan",
           "options": {
             "textToEcho": "Hello World"
-          },
-          "dependsOn": [{
-            "target": "pre-commit",
-            "projects": "dependencies"
-          }]
+          }
         }
       },
       "tags": null

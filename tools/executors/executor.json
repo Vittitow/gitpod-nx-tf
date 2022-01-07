@@ -9,6 +9,16 @@
       "implementation": "./tfplan/index",
       "schema": "./tfplan/schema.json",
       "description": "Runs `echo` (to test executors out)."
+    },
+    "terraform-build": {
+      "implementation": "./terraform-build/terraform-build.impl",
+      "schema": "./terraform-build/schema.json",
+      "description": "Runs build tasks for terraform apps, app-envs and libs."
+    },
+    "terraform-plan": {
+      "implementation": "./terraform-plan/terraform-plan.impl",
+      "schema": "./terraform-plan/schema.json",
+      "description": "Runs plan tasks for terraform app-envs and libs."
     }
   }
 }
