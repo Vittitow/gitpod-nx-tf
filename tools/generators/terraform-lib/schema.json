@@ -11,6 +11,10 @@
         "$source": "argv",
         "index": 0
       }
+    },
+    "tags": {
+      "type": "string",
+      "description": "Add tags to the library"
     }
   },
   "required": ["name"]

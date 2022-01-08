@@ -15,14 +15,14 @@ exports.processProjectGraph = async (graph, context) => {
   const builder = new ProjectGraphBuilder(graph);
 
   for (const projectName in context.workspace.projects) {
-    const path = context.workspace.projects[projectName].root;
+    const path = context.workspace.projects[projectName].sourceRoot;
     const files = await globby('**/*.tf*', { cwd: path, gitignore: true });
     const json = await convertFiles(path);
 
     for (const module in json['module']) {
       const source = resolve(json['module'][module][0].source);
       const dependency = Object.keys(context.workspace.projects).find(
-        (key) => `/${context.workspace.projects[key].root}` === source
+        (key) => `/${context.workspace.projects[key].sourceRoot}` === source
       );
 
       if (dependency !== undefined)

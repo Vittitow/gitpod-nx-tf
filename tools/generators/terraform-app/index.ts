@@ -1,10 +1,42 @@
-import { Tree, formatFiles, installPackagesTask } from '@nrwl/devkit';
-import { libraryGenerator } from '@nrwl/workspace/generators';
+import { addProjectConfiguration, formatFiles, generateFiles, joinPathFragments, Tree } from '@nrwl/devkit';
+import {
+  terraformProjectConfiguration,
+  TerraformProjectType,
+  TerraformProjectOptions,
+} from '../shared/utils/terraform-project-configuration';
 
-export default async function (tree: Tree, schema: any) {
-  await libraryGenerator(tree, { name: schema.name });
+export default async function (
+  tree: Tree,
+  options: TerraformProjectOptions
+) {
+  const projectConfiguration = terraformProjectConfiguration(
+    tree,
+    options,
+    TerraformProjectType.Application
+  );
+
+  addProjectConfiguration(
+    tree,
+    options.name,
+    projectConfiguration,
+    false
+  );
+
+  generateFiles(
+    tree,
+    joinPathFragments(__dirname, '../shared/files'),
+    projectConfiguration.sourceRoot,
+    {}
+  );
+
+  generateFiles(
+    tree,
+    joinPathFragments(__dirname, 'files'),
+    projectConfiguration.sourceRoot,
+    {
+      app: projectConfiguration.name
+    }
+  );
+
   await formatFiles(tree);
-  return () => {
-    installPackagesTask(tree);
-  };
 }

@@ -1,218 +1,63 @@
 {
   "version": 2,
   "projects": {
-    "a1": {
-      "root": "apps/a1",
-      "projectType": "application",
-      "sourceRoot": "apps/a1",
+    "myapp": {
+      "name": "myapp",
+      "root": "apps/myapp/src",
+      "sourceRoot": "apps/myapp/src",
       "targets": {
-        "pre-commit": {
-          "executor": "@nrwl/workspace:run-commands",
-          "options": {
-            "commands": [
-              "tfenv use",
-              "terraform init -backend=false",
-              "terraform validate",
-              "terraform fmt -recursive",
-              "tflint",
-              "tfsec",
-              "terraform-docs markdown table --output-file README.md --output-mode inject ."
-            ],
-            "cwd": "apps/a1",
-            "parallel": false
-          }
-        },
-        "plan": {
-          "executor": "@nrwl/workspace:run-commands",
-          "options": {
-            "commands": [
-              "tfenv use",
-              "terraform init",
-              "terraform plan --out=a1.tfplan"
-            ],
-            "cwd": "apps/a1",
-            "parallel": false
-          }
-        }
-      },
-      "tags": null
-    },
-    "a2": {
-      "root": "apps/a2",
-      "projectType": "application",
-      "sourceRoot": "apps/a2",
-      "targets": {
-        "pre-commit": {
-          "executor": "@nrwl/workspace:run-commands",
-          "options": {
-            "commands": [
-              "tfenv use",
-              "terraform init -backend=false",
-              "terraform validate",
-              "terraform fmt -recursive",
-              "tflint",
-              "tfsec",
-              "terraform-docs markdown table --output-file README.md --output-mode inject ."
-            ],
-            "cwd": "apps/a2",
-            "parallel": false
-          }
-        },
-        "plan": {
-          "executor": "./tools/executors:tfplan"
-        },
-        "plan:sandbox": {
-          "executor": "@nrwl/workspace:run-commands",
-          "options": {
-            "commands": [
-              "tfenv use",
-              "terraform init",
-              "terraform plan --out=a2.sandbox.tfplan"
-            ],
-            "cwd": "apps/a2",
-            "envFile": "apps/a2/env/sandbox/.sandbox.env",
-            "parallel": false
-          }
-        },
         "build": {
-          "executor": "./tools/executors:tfbuild",
-          "options": {},
-          "dependsOn": [
-            {
-              "target": "build",
-              "projects": "dependencies"
-            }
-          ]
-        },
-        "plan:np": {
-          "executor": "@nrwl/workspace:run-commands",
+          "executor": "./tools/executors:terraform-build",
           "options": {
-            "commands": [
-              "tfenv use",
-              "terraform init",
-              "terraform plan --out=a2.np.tfplan"
-            ],
-            "cwd": "apps/a2",
-            "envFile": "apps/a2/env/np/.np.env",
-            "parallel": false
+            "textToEcho": "Hello myapp"
           }
         }
       },
-      "tags": null
+      "projectType": "application"
     },
-    "a3": {
-      "root": "apps/a3",
+    "myapp/env/myenv": {
+      "name": "myapp/env/myenv",
+      "root": "apps/myapp/env/myenv",
+      "sourceRoot": "apps/myapp/env/myenv",
+      "targets": {
+        "build": {
+          "executor": "./tools/executors:terraform-build",
+          "options": {
+            "textToEcho": "Hello myapp/env/myenv"
+          }
+        }
+      },
       "projectType": "application",
-      "sourceRoot": "apps/a3",
-      "targets": {
-        "pre-commit": {
-          "executor": "@nrwl/workspace:run-commands",
-          "options": {
-            "commands": [
-              "tfenv use",
-              "terraform init -backend=false",
-              "terraform validate",
-              "terraform fmt -recursive",
-              "tflint",
-              "tfsec",
-              "terraform-docs markdown table --output-file README.md --output-mode inject ."
-            ],
-            "cwd": "apps/a3",
-            "parallel": false
-          }
-        },
-        "plan": {
-          "executor": "@nrwl/workspace:run-commands",
-          "options": {
-            "commands": [
-              "tfenv use",
-              "terraform init",
-              "terraform plan --out=a3.tfplan"
-            ],
-            "cwd": "apps/a3",
-            "parallel": false
-          }
-        },
-        "echo": {
-          "executor": "./tools/executors:terraform-plan",
-          "options": {
-            "textToEcho": "Hello World"
-          }
-        }
-      },
-      "tags": null
+      "implicitDependencies": ["myapp"]
     },
-    "l1": {
-      "root": "libs/l1",
-      "projectType": "library",
-      "sourceRoot": "libs/l1",
+    "myapp/env/myotherenv": {
+      "name": "myapp/env/myotherenv",
+      "root": "apps/myapp/env/myotherenv",
+      "sourceRoot": "apps/myapp/env/myotherenv",
       "targets": {
-        "pre-commit": {
-          "executor": "@nrwl/workspace:run-commands",
-          "options": {
-            "commands": [
-              "tfenv use",
-              "terraform fmt -recursive",
-              "tflint",
-              "tfsec",
-              "terraform-docs markdown table --output-file README.md --output-mode inject ."
-            ],
-            "cwd": "libs/l1",
-            "parallel": false
-          }
-        },
         "build": {
-          "executor": "./tools/executors:tfbuild"
-        }
-      },
-      "tags": null
-    },
-    "l2": {
-      "root": "libs/l2",
-      "projectType": "library",
-      "sourceRoot": "libs/l2",
-      "targets": {
-        "pre-commit": {
-          "executor": "@nrwl/workspace:run-commands",
+          "executor": "./tools/executors:terraform-build",
           "options": {
-            "commands": [
-              "tfenv use",
-              "terraform fmt -recursive",
-              "tflint",
-              "tfsec",
-              "terraform-docs markdown table --output-file README.md --output-mode inject ."
-            ],
-            "cwd": "libs/l2",
-            "parallel": false
+            "textToEcho": "Hello myapp/env/myotherenv"
           }
         }
       },
-      "tags": null
+      "projectType": "application",
+      "implicitDependencies": ["myapp"]
     },
-    "l3": {
-      "root": "libs/l3",
-      "projectType": "library",
-      "sourceRoot": "libs/l3",
+    "mylib": {
+      "name": "mylib",
+      "root": "libs/mylib/src",
+      "sourceRoot": "libs/mylib/src",
       "targets": {
-        "pre-commit": {
-          "executor": "@nrwl/workspace:run-commands",
-          "options": {
-            "commands": [
-              "tfenv use",
-              "terraform fmt -recursive",
-              "tflint",
-              "tfsec",
-              "terraform-docs markdown table --output-file README.md --output-mode inject ."
-            ],
-            "cwd": "libs/l3",
-            "parallel": false
-          }
-        },
         "build": {
-          "executor": "./tools/executors:tfbuild"
+          "executor": "./tools/executors:terraform-build",
+          "options": {
+            "textToEcho": "Hello mylib"
+          }
         }
       },
-      "tags": null
+      "projectType": "library"
     }
   }
 }
