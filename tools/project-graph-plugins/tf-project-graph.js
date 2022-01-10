@@ -16,7 +16,7 @@ exports.processProjectGraph = async (graph, context) => {
 
   for (const projectName in context.workspace.projects) {
     const path = context.workspace.projects[projectName].sourceRoot;
-    const files = await globby('**/*.tf*', { cwd: path, gitignore: true });
+    const files = await globby('**/*.*', { cwd: path, gitignore: true });
     const json = await convertFiles(path);
 
     for (const module in json['module']) {
@@ -25,16 +25,36 @@ exports.processProjectGraph = async (graph, context) => {
         (key) => `/${context.workspace.projects[key].sourceRoot}` === source
       );
 
-      if (dependency !== undefined)
-        for (let i = 0; i < files.length; i++) {
-          builder.addExplicitDependency(
-            projectName,
-            joinPathFragments(path, files[i]),
-            dependency
-          );
-        }
+      addExplicitDependency(builder, projectName, path, files, dependency);
     }
+
+    if (!path.includes('/env/')) continue;
+
+    const dependency =
+      context.workspace.projects[projectName.split('/')[0]]?.name;
+
+    addExplicitDependency(builder, projectName, path, files, dependency);
   }
 
   return builder.getUpdatedProjectGraph();
 };
+
+/**
+ * @param {import('@nrwl/devkit').ProjectGraphBuilder} builder
+ * @param {string} projectName
+ * @param {string} path
+ * @param {string[]} files
+ * @param {string} dependency
+ * @returns {void}
+ */
+function addExplicitDependency(builder, projectName, path, files, dependency) {
+  if (dependency === undefined) return;
+
+  for (let i = 0; i < files.length; i++) {
+    builder.addExplicitDependency(
+      projectName,
+      joinPathFragments(path, files[i]),
+      dependency
+    );
+  }
+}

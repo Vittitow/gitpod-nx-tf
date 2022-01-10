@@ -25,7 +25,7 @@ export default async function (
   generateFiles(
     tree,
     joinPathFragments(__dirname, '../shared/files'),
-    projectConfiguration.sourceRoot,
+    projectConfiguration.root,
     {}
   );
 

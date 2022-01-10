@@ -25,14 +25,14 @@ export default async function (
   generateFiles(
     tree,
     joinPathFragments(__dirname, '../shared/files'),
-    projectConfiguration.sourceRoot,
+    projectConfiguration.root,
     {}
   );
 
   generateFiles(
     tree,
     joinPathFragments(__dirname, 'files'),
-    projectConfiguration.sourceRoot,
+    projectConfiguration.root,
     {
       app: projectConfiguration.name
     }

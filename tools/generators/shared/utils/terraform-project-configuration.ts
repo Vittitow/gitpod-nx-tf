@@ -44,8 +44,5 @@ export function terraformProjectConfiguration(
     tags: options.tags?.split(' '),
   };
 
-  if (projectType === TerraformProjectType.ApplicationEnvironment)
-    projectConfiguration.implicitDependencies = [options.name.split('/')[0]];
-
   return projectConfiguration;
 }

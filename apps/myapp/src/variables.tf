@@ -3,7 +3,3 @@
 #   type        = number
 #   default     = 10
 # }
-
-variable "myvar" {
-    type = number
-}
