@@ -29,6 +29,9 @@
       "sourceRoot": "libs/mylib/src",
       "projectType": "library",
       "targets": {
+        "build": {
+          "executor": "./tools/executors:terraform-build"
+        },
         "lint": {
           "executor": "./tools/executors:terraform-lint"
         }
