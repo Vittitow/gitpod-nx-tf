@@ -7,11 +7,8 @@
       "sourceRoot": "apps/myapp/src",
       "projectType": "application",
       "targets": {
-        "build": {
-          "executor": "./tools/executors:terraform-build",
-          "options": {
-            "textToEcho": "Hello myapp"
-          }
+        "lint": {
+          "executor": "./tools/executors:terraform-lint"
         }
       }
     },
@@ -21,11 +18,8 @@
       "sourceRoot": "apps/myapp/env/myenv",
       "projectType": "application",
       "targets": {
-        "build": {
-          "executor": "./tools/executors:terraform-build",
-          "options": {
-            "textToEcho": "Hello myapp/env/myenv"
-          }
+        "lint": {
+          "executor": "./tools/executors:terraform-lint"
         }
       }
     },
@@ -35,11 +29,8 @@
       "sourceRoot": "libs/mylib/src",
       "projectType": "library",
       "targets": {
-        "build": {
-          "executor": "./tools/executors:terraform-build",
-          "options": {
-            "textToEcho": "Hello mylib"
-          }
+        "lint": {
+          "executor": "./tools/executors:terraform-lint"
         }
       }
     }

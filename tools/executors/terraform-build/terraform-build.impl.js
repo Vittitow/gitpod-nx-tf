@@ -1,5 +1,5 @@
 require('ts-node').register({
-  project: 'tsconfig.base.json',
+  project: './tools/tsconfig.tools.json',
 });
 
 module.exports = require('./terraform-build.impl.ts');

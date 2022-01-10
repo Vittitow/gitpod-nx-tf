@@ -3,9 +3,9 @@
   "type": "object",
   "cli": "nx",
   "properties": {
-    "env": {
-      "description": "Name of the environment to build.",
-      "type": "string"
+    "textToEcho": {
+      "type": "string",
+      "description": "Text To Echo"
     }
   }
 }

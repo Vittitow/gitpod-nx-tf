@@ -1,25 +1,18 @@
 import { ExecutorContext } from '@nrwl/devkit';
 import { exec } from 'child_process';
 import { promisify } from 'util';
-import run_commands from '@nrwl/workspace/src/executors/run-commands/run-commands.impl'
+import { copySync, pathExistsSync, removeSync, readdirSync } from 'fs-extra';
 
-export interface EchoExecutorOptions {
-  textToEcho: string;
+export interface TerraformBuildExecutorOptions {
 }
 
-export default async function echoExecutor(
-  options: EchoExecutorOptions,
+export default async function terraformBuildExecutor(
+  options: TerraformBuildExecutorOptions,
   context: ExecutorContext
 ) {
-  console.info(`Executing "echo"...`);
-  console.info(`Options: ${JSON.stringify(options, null, 2)}`);
+  const projectConfiguration = context.workspace.projects[context.projectName];
 
-  const { stdout, stderr } = await promisify(exec)(
-    `echo ${options.textToEcho}`
-  );
-  console.log(stdout);
-  console.error(stderr);
+  if(projectConfiguration === undefined) return { sucess: true }
 
-  const success = !stderr;
-  return { success };
+  // TODO
 }

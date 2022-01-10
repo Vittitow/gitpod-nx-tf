@@ -1,9 +1,9 @@
 repos:
 - repo: local
   hooks:
-    - id: nx-affected-pre-commit
-      name: nx-affected-pre-commit
-      entry: nx affected --target=pre-commit
+    - id: nx-affected-terraform-lint
+      name: nx-affected-terraform-lint
+      entry: nx affected:lint
       language: system
       types: []
       pass_filenames: false

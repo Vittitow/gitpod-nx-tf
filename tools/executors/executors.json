@@ -1,19 +1,19 @@
 {
   "executors": {
-    "tfbuild": {
-      "implementation": "./tfbuild/index",
-      "schema": "./tfbuild/schema.json",
-      "description": "Runs `echo` (to test executors out)."
-    },
-    "tfplan": {
-      "implementation": "./tfplan/index",
-      "schema": "./tfplan/schema.json",
-      "description": "Runs `echo` (to test executors out)."
+    "terraform-apply": {
+      "implementation": "./terraform-apply/terraform-apply.impl",
+      "schema": "./terraform-apply/schema.json",
+      "description": "Runs apply tasks for terraform app-envs."
     },
     "terraform-build": {
       "implementation": "./terraform-build/terraform-build.impl",
       "schema": "./terraform-build/schema.json",
       "description": "Runs build tasks for terraform apps, app-envs and libs."
+    },
+    "terraform-lint": {
+      "implementation": "./terraform-lint/terraform-lint.impl",
+      "schema": "./terraform-lint/schema.json",
+      "description": "Runs lint tasks for terraform apps and libs."
     },
     "terraform-plan": {
       "implementation": "./terraform-plan/terraform-plan.impl",

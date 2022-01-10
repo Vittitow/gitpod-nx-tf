@@ -3,5 +3,5 @@
 # }
 
 module "mylib" {
-  source = "../../libs/mylib/src"
+  source = "../../../libs/mylib/src"
 }
