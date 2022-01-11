@@ -1,8 +1,14 @@
-import { ExecutorContext, formatFiles, generateFiles, joinPathFragments } from '@nrwl/devkit';
+import {
+  ExecutorContext,
+  formatFiles,
+  generateFiles,
+  joinPathFragments,
+} from '@nrwl/devkit';
 import { flushChanges, FsTree, printChanges } from '@nrwl/tao/src/shared/tree';
 import { execSync } from 'child_process';
-import { promisify } from 'util';
-import { copySync, pathExistsSync, removeSync, readdirSync } from 'fs-extra';
+import { removeSync } from 'fs-extra';
+
+export const LARGE_BUFFER = 1024 * 1000000;
 
 export interface TerraformBuildExecutorOptions {}
 
@@ -12,28 +18,31 @@ export default async function terraformBuildExecutor(
 ) {
   const projectConfiguration = context.workspace.projects[context.projectName];
 
-  if (projectConfiguration === undefined) return { success: true };
-
   if (
-    projectConfiguration.projectType === 'application' &&
-    projectConfiguration.sourceRoot.includes('/src')
+    projectConfiguration === undefined ||
+    (projectConfiguration.projectType === 'application' &&
+      projectConfiguration.sourceRoot.includes('/src'))
   )
     return { success: true };
 
-  const target = joinPathFragments('dist', projectConfiguration.sourceRoot);
+  const tree = new FsTree(context.root, false);
+  const target = joinPathFragments(
+    'dist',
+    projectConfiguration.sourceRoot.replace('/env', '')
+  );
+  const envVars = require('dotenv').config({
+    path: `${projectConfiguration.sourceRoot}/.env`,
+  });
+
+  if (!envVars.error) require('dotenv-expand')(envVars);
 
   removeSync(target);
-
-  const tree = new FsTree(context.root, false);
-
   generateFiles(
     tree,
     projectConfiguration.sourceRoot,
     target,
-    {
-
-    }
-  )
+    process.env
+  );
 
   await formatFiles(tree);
 
@@ -42,5 +51,12 @@ export default async function terraformBuildExecutor(
   printChanges(fileChanges);
   flushChanges(context.root, fileChanges);
 
-  return { success: true }
+  execSync('tfenv use > nul && terraform init -backend=false -get=false > nul && terraform validate > nul && tfsec', {
+    env: process.env,
+    stdio: [0, 1, 2],
+    maxBuffer: LARGE_BUFFER,
+    cwd: target
+  });
+
+  return { success: true };
 }
