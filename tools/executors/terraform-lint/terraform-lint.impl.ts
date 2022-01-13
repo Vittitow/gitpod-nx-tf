@@ -10,25 +10,20 @@ export default async function terraformLintExecutor(
   context: ExecutorContext
 ) {
   const projectConfiguration = context.workspace.projects[context.projectName];
-
-  if (projectConfiguration === undefined) return { success: true };
-
   const commands = [
     {
       command: 'terraform fmt',
       forwardAllArgs: false,
     },
     {
-      command: 'tflint',
+      command: 'tflint --init && tflint',
+      forwardAllArgs: false,
+    },
+    {
+      command: 'terraform-docs .',
       forwardAllArgs: false,
     },
   ];
-
-  if (!projectConfiguration.sourceRoot.includes('/env/'))
-    commands.push({
-      command: 'terraform-docs .',
-      forwardAllArgs: false,
-    });
 
   const runCommandsBuilderOptions: RunCommandsBuilderOptions = {
     commands: commands,

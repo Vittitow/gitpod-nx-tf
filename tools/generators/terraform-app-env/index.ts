@@ -1,33 +1,30 @@
-import { addProjectConfiguration, formatFiles, generateFiles, joinPathFragments, Tree } from '@nrwl/devkit';
 import {
-  terraformProjectConfiguration,
-  TerraformProjectType,
-  TerraformProjectOptions,
-} from '../shared/utils/terraform-project-configuration';
+  getProjects,
+  formatFiles,
+  generateFiles,
+  joinPathFragments,
+  Tree,
+} from '@nrwl/devkit';
 
-export default async function (
-  tree: Tree,
-  options: TerraformProjectOptions
-) {
-  const projectConfiguration = terraformProjectConfiguration(
-    tree,
-    options,
-    TerraformProjectType.ApplicationEnvironment
-  );
+export interface TerraformAppEnvOptions {
+  app: string;
+  env: string;
+}
 
-  addProjectConfiguration(
-    tree,
-    options.name,
-    projectConfiguration,
-    false
-  );
+export default async function (tree: Tree, options: TerraformAppEnvOptions) {
+  const projectConfiguration = getProjects(tree).get(options.app);
+
+  if (projectConfiguration === undefined)
+    throw new Error(
+      `Project configuration for app ${options.app} not found in worspace`
+    );
 
   generateFiles(
     tree,
-    joinPathFragments(__dirname, 'files'),
-    projectConfiguration.sourceRoot,
+    joinPathFragments(__dirname, './files'),
+    joinPathFragments(projectConfiguration.root, './env', options.env),
     {
-      env: projectConfiguration.name.split('/').pop()
+      env: options.env,
     }
   );
 

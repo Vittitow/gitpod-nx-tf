@@ -1,0 +1,6 @@
+{
+  "name": "mylib",
+  "root": "libs/mylib",
+  "sourceRoot": "libs/mylib/src",
+  "projectType": "library"
+}

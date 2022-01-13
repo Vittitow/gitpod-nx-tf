@@ -1,7 +1,9 @@
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | 1.1.3 |
 
 ## Providers
 
@@ -9,9 +11,7 @@ No providers.
 
 ## Modules
 
-| Name | Source | Version |
-|------|--------|---------|
-| <a name="module_mylib"></a> [mylib](#module\_mylib) | ../../../libs/mylib/src | n/a |
+No modules.
 
 ## Resources
 

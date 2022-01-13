@@ -1,25 +1,27 @@
-import { addProjectConfiguration, formatFiles, generateFiles, joinPathFragments, Tree } from '@nrwl/devkit';
+import {
+  addProjectConfiguration,
+  formatFiles,
+  generateFiles,
+  joinPathFragments,
+  Tree,
+} from '@nrwl/devkit';
 import {
   terraformProjectConfiguration,
-  TerraformProjectType,
   TerraformProjectOptions,
 } from '../shared/utils/terraform-project-configuration';
 
-export default async function (
-  tree: Tree,
-  options: TerraformProjectOptions
-) {
+export default async function (tree: Tree, options: TerraformProjectOptions) {
   const projectConfiguration = terraformProjectConfiguration(
     tree,
     options,
-    TerraformProjectType.Library
+    'library'
   );
 
   addProjectConfiguration(
     tree,
-    options.name,
+    projectConfiguration.name,
     projectConfiguration,
-    false
+    true
   );
 
   generateFiles(

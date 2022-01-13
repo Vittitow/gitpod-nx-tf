@@ -2,6 +2,7 @@ import {
   getWorkspaceLayout,
   joinPathFragments,
   ProjectConfiguration,
+  ProjectType,
   Tree,
 } from '@nrwl/devkit';
 
@@ -10,38 +11,28 @@ export interface TerraformProjectOptions {
   tags?: string;
 }
 
-export enum TerraformProjectType {
-  Application,
-  ApplicationEnvironment,
-  Library,
-}
-
 export function terraformProjectConfiguration(
   tree: Tree,
   options: TerraformProjectOptions,
-  projectType: TerraformProjectType
+  projectType: ProjectType
 ): ProjectConfiguration {
   const workspaceLayout = getWorkspaceLayout(tree);
 
   const root = joinPathFragments(
-    projectType === TerraformProjectType.Library
-      ? workspaceLayout.libsDir
-      : workspaceLayout.appsDir,
+    projectType === 'application'
+      ? workspaceLayout.appsDir
+      : workspaceLayout.libsDir,
     options.name
   );
 
-  const sourceRoot = joinPathFragments(
-    root,
-    projectType === TerraformProjectType.ApplicationEnvironment ? '' : 'src'
-  );
+  const sourceRoot = joinPathFragments(root, './src');
 
   const projectConfiguration: ProjectConfiguration = {
-    name: options.name,
+    name: options.name.replace('/', '-'),
     root: root,
     sourceRoot: sourceRoot,
-    projectType:
-      projectType === TerraformProjectType.Library ? 'library' : 'application',
-    tags: options.tags?.split(' '),
+    projectType: projectType,
+    tags: options.tags?.split(',').map(tag => tag.trim()),
   };
 
   return projectConfiguration;

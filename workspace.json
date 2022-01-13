@@ -1,41 +1,7 @@
 {
   "version": 2,
   "projects": {
-    "myapp": {
-      "name": "myapp",
-      "root": "apps/myapp",
-      "sourceRoot": "apps/myapp/src",
-      "projectType": "application",
-      "targets": {
-        "lint": {
-          "executor": "./tools/executors:terraform-lint"
-        }
-      }
-    },
-    "myapp/env/myenv": {
-      "name": "myapp/env/myenv",
-      "root": "apps/myapp/env/myenv",
-      "sourceRoot": "apps/myapp/env/myenv",
-      "projectType": "application",
-      "targets": {
-        "lint": {
-          "executor": "./tools/executors:terraform-lint"
-        }
-      }
-    },
-    "mylib": {
-      "name": "mylib",
-      "root": "libs/mylib",
-      "sourceRoot": "libs/mylib/src",
-      "projectType": "library",
-      "targets": {
-        "build": {
-          "executor": "./tools/executors:terraform-build"
-        },
-        "lint": {
-          "executor": "./tools/executors:terraform-lint"
-        }
-      }
-    }
+    "myapp": "apps/myapp",
+    "mylib": "libs/mylib"
   }
 }

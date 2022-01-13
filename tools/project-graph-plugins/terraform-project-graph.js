@@ -24,16 +24,9 @@ exports.processProjectGraph = async (graph, context) => {
       const dependency = Object.keys(context.workspace.projects).find(
         (key) => `/${context.workspace.projects[key].sourceRoot}` === source
       );
-
+      
       addExplicitDependency(builder, projectName, path, files, dependency);
     }
-
-    if (!path.includes('/env/')) continue;
-
-    const dependency =
-      context.workspace.projects[projectName.split('/')[0]]?.name;
-
-    addExplicitDependency(builder, projectName, path, files, dependency);
   }
 
   return builder.getUpdatedProjectGraph();

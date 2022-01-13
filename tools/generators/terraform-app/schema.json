@@ -14,7 +14,7 @@
     },
     "tags": {
       "type": "string",
-      "description": "Add tags to the application"
+      "description": "Add tags to the application (separated by commas)"
     }
   },
   "required": ["name"]

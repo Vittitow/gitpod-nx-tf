@@ -4,14 +4,22 @@
   "$id": "terraform-app-env",
   "type": "object",
   "properties": {
-    "name": {
+    "app": {
       "type": "string",
-      "description": "Application environment name",
+      "description": "Application name",
       "$default": {
         "$source": "argv",
         "index": 0
       }
+    },
+    "env": {
+      "type": "string",
+      "description": "Environment name",
+      "$default": {
+        "$source": "argv",
+        "index": 1
+      }
     }
   },
-  "required": ["name"]
+  "required": ["app", "env"]
 }
