@@ -17,6 +17,16 @@ export default async function (tree: Tree, options: TerraformProjectOptions) {
     'application'
   );
 
+  projectConfiguration.targets = {
+    ...projectConfiguration.targets,
+    plan: {
+      executor: './tools/executors:terraform-plan'
+    },
+    apply: {
+      executor: './tools/executors:terraform-apply'
+    }
+  }
+
   addProjectConfiguration(
     tree,
     projectConfiguration.name,
@@ -37,7 +47,7 @@ export default async function (tree: Tree, options: TerraformProjectOptions) {
     projectConfiguration.root,
     {
       app: projectConfiguration.name,
-      env: '<%= env %>',
+      env: '<%- env %>',
     }
   );
 

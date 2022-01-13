@@ -8,6 +8,7 @@ import {
 } from '@nrwl/devkit';
 import { flushChanges, FsTree, printChanges } from '@nrwl/tao/src/shared/tree';
 import { execSync } from 'child_process';
+import { resolve } from 'path';
 import { pathExistsSync, readdirSync, removeSync } from 'fs-extra';
 
 export const LARGE_BUFFER = 1024 * 1000000;
@@ -33,7 +34,7 @@ export default async function terraformBuildExecutor(
     const build = builds[i];
 
     const envVars = require('dotenv').config({
-      path: `${build.sourceEnv}/.env`,
+      path: resolve(build.sourceEnv ?? build.sourceRoot, '.env'),
     });
 
     if (!envVars.error) require('dotenv-expand')(envVars);
@@ -52,7 +53,7 @@ export default async function terraformBuildExecutor(
     flushChanges(context.root, fileChanges);
 
     execSync(
-      'tfenv install && terraform init -backend=false && terraform validate && tfsec',
+      'tfenv install min-required && tfenv use min-required && terraform init -backend=false && terraform validate && tfsec',
       {
         env: process.env,
         stdio: [0, 1, 2],
@@ -86,14 +87,14 @@ function getTerraformBuilds(
   const path = joinPathFragments(projectConfiguration.root, './env');
 
   if (!pathExistsSync(path)) {
-    logger.warn(`No environments found for app: ${projectConfiguration.name}`);
+    logger.warn(`No environments found for app: '${projectConfiguration.name}'`);
 
     return [];
   }
 
   if (environments.length === 0) {
     logger.debug(
-      `Attempting to build all environments for app: ${projectConfiguration.name} as none were specified`
+      `Attempting to build all environments for app: '${projectConfiguration.name}' as none were specified`
     );
 
     environments.push(
@@ -110,7 +111,7 @@ function getTerraformBuilds(
 
     if (!pathExistsSync(sourceEnv)) {
       logger.warn(
-        `Environment: ${environment} not found for app: ${projectConfiguration.name}`
+        `Environment: '${environment}' not found for app: '${projectConfiguration.name}'`
       );
 
       continue;

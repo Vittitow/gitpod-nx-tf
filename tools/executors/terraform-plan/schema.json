@@ -3,9 +3,9 @@
   "type": "object",
   "cli": "nx",
   "properties": {
-    "textToEcho": {
+    "environments": {
       "type": "string",
-      "description": "Text To Echo"
+      "description": "Name of environment(s) to plan (separated by commas)"
     }
   }
 }

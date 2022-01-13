@@ -1,8 +1,8 @@
 terraform {
   #   backend "azurerm" {
-  #     resource_group_name  = "rg-tfstate-eastus2"
-  #     storage_account_name = "sttfstateeastus2"
+  #     resource_group_name  = "rg-tfstate-<%- env %>-eastus2"
+  #     storage_account_name = "sttfstate<%- env %>eastus2"
   #     container_name       = "tfstate"
-  #     key                  = "myapp.&lt;%= env %&gt;.tfstate"
+  #     key                  = "myapp.<%- env %>.tfstate"
   #   }
 }
