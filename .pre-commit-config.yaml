@@ -1,9 +1,0 @@
-repos:
-- repo: local
-  hooks:
-    - id: nx-affected-terraform-lint
-      name: nx-affected-terraform-lint
-      entry: nx affected:lint
-      language: system
-      types: []
-      pass_filenames: false

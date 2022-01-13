@@ -1,7 +1,7 @@
 # Learn more about this file at https://www.gitpod.io/docs/references/gitpod-yml
 image: public.ecr.aws/vlaaaaaaad/gitpod-terraform:latest
 tasks:
-  - init: npm i -g @nrwl/cli commitizen && npm i
+  - init: npm i -g @nrwl/cli commitizen && npm i && npm run prepare
 ports:
   - port: 4200
     onOpen: open-preview
