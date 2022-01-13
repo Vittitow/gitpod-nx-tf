@@ -23,7 +23,7 @@ export default async function terraformBuildExecutor(
   const projectConfiguration = context.workspace.projects[context.projectName];
   const builds = getTerraformBuilds(
     projectConfiguration,
-    options.environments
+    options.environments === undefined
       ? []
       : options.environments.split(',').map((environment) => environment.trim())
   );
@@ -52,7 +52,7 @@ export default async function terraformBuildExecutor(
     flushChanges(context.root, fileChanges);
 
     execSync(
-      'tfenv use > nul && terraform init -backend=false -get=false > nul && terraform validate > nul && tfsec',
+      'tfenv install && terraform init -backend=false && terraform validate && tfsec',
       {
         env: process.env,
         stdio: [0, 1, 2],
@@ -86,14 +86,14 @@ function getTerraformBuilds(
   const path = joinPathFragments(projectConfiguration.root, './env');
 
   if (!pathExistsSync(path)) {
-    logger.warn(`No environments found for app ${projectConfiguration.name}`);
+    logger.warn(`No environments found for app: ${projectConfiguration.name}`);
 
     return [];
   }
 
   if (environments.length === 0) {
     logger.debug(
-      `Attempting to build all environments for app ${projectConfiguration.name} as none were specified`
+      `Attempting to build all environments for app: ${projectConfiguration.name} as none were specified`
     );
 
     environments.push(
@@ -110,21 +110,20 @@ function getTerraformBuilds(
 
     if (!pathExistsSync(sourceEnv)) {
       logger.warn(
-        `Environment ${environment} not found for app ${projectConfiguration.name}`
+        `Environment: ${environment} not found for app: ${projectConfiguration.name}`
       );
 
       continue;
     }
 
-    const target = projectConfiguration.sourceRoot.replace(
-      `/${projectConfiguration.name}/`,
-      `/${projectConfiguration.name}-${environment}/`
-    );
-
     builds.push({
       sourceRoot: projectConfiguration.sourceRoot,
       sourceEnv: sourceEnv,
-      target: joinPathFragments('./dist', target),
+      target: joinPathFragments(
+        './dist',
+        projectConfiguration.sourceRoot,
+        `../${environment}`
+      ),
     });
   }
 

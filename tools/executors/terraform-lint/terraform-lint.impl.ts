@@ -12,7 +12,7 @@ export default async function terraformLintExecutor(
   const projectConfiguration = context.workspace.projects[context.projectName];
   const commands = [
     {
-      command: 'terraform fmt',
+      command: 'cd .. && terraform fmt -recursive',
       forwardAllArgs: false,
     },
     {

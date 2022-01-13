@@ -11,9 +11,7 @@ No providers.
 
 ## Modules
 
-| Name | Source | Version |
-|------|--------|---------|
-| <a name="module_mylib"></a> [mylib](#module\_mylib) | ../../../libs/mylib/src | n/a |
+No modules.
 
 ## Resources
 

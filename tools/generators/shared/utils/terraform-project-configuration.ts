@@ -29,6 +29,14 @@ export function terraformProjectConfiguration(
 
   const projectConfiguration: ProjectConfiguration = {
     name: options.name.replace('/', '-'),
+    targets: {
+      build: {
+        executor: './tools/executors:terraform-build'
+      },
+      lint: {
+        executor: './tools/executors:terraform-lint'
+      }
+    },
     root: root,
     sourceRoot: sourceRoot,
     projectType: projectType,

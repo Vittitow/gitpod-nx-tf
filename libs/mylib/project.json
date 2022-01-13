@@ -1,5 +1,13 @@
 {
   "name": "mylib",
+  "targets": {
+    "build": {
+      "executor": "./tools/executors:terraform-build"
+    },
+    "lint": {
+      "executor": "./tools/executors:terraform-lint"
+    }
+  },
   "root": "libs/mylib",
   "sourceRoot": "libs/mylib/src",
   "projectType": "library"

@@ -1,7 +1,5 @@
 {
   "name": "myapp",
-  "root": "apps/myapp",
-  "sourceRoot": "apps/myapp/src",
   "targets": {
     "build": {
       "executor": "./tools/executors:terraform-build"
@@ -10,5 +8,7 @@
       "executor": "./tools/executors:terraform-lint"
     }
   },
+  "root": "apps/myapp",
+  "sourceRoot": "apps/myapp/src",
   "projectType": "application"
 }
