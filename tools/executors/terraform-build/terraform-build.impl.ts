@@ -8,6 +8,7 @@ import {
 } from '@nrwl/devkit';
 import { flushChanges, FsTree, printChanges } from '@nrwl/tao/src/shared/tree';
 import { execSync } from 'child_process';
+const globby = require('globby');
 import { resolve } from 'path';
 import { pathExistsSync, readdirSync, removeSync } from 'fs-extra';
 
@@ -52,8 +53,12 @@ export default async function terraformBuildExecutor(
     printChanges(fileChanges);
     flushChanges(context.root, fileChanges);
 
+    const tfvars = (await globby('*.auto.tfvars', { cwd: build.target }))
+      .map((file) => `--tfvars-file ${file}`)
+      .join(' ');
+
     execSync(
-      'tfenv install min-required && tfenv use min-required && terraform init -backend=false && terraform validate && tfsec',
+      `tfenv install min-required && tfenv use min-required && terraform init -backend=false && terraform validate && tfsec ${tfvars}`,
       {
         env: process.env,
         stdio: [0, 1, 2],
@@ -87,7 +92,9 @@ function getTerraformBuilds(
   const path = joinPathFragments(projectConfiguration.root, './env');
 
   if (!pathExistsSync(path)) {
-    logger.warn(`No environments found for app: '${projectConfiguration.name}'`);
+    logger.warn(
+      `No environments found for app: '${projectConfiguration.name}'`
+    );
 
     return [];
   }

@@ -4,6 +4,7 @@ import {
   ProjectConfiguration,
   ProjectType,
   Tree,
+  names
 } from '@nrwl/devkit';
 
 export interface TerraformProjectOptions {
@@ -22,13 +23,13 @@ export function terraformProjectConfiguration(
     projectType === 'application'
       ? workspaceLayout.appsDir
       : workspaceLayout.libsDir,
-    options.name
+    options.name.toLowerCase()
   );
 
   const sourceRoot = joinPathFragments(root, './src');
 
   const projectConfiguration: ProjectConfiguration = {
-    name: options.name.replace('/', '-'),
+    name: names(options.name.replace('/', '-')).fileName,
     targets: {
       build: {
         executor: './tools/executors:terraform-build'

@@ -1,7 +1,4 @@
 {
   "version": 2,
-  "projects": {
-    "myapp": "apps/myapp",
-    "mylib": "libs/mylib"
-  }
+  "projects": {}
 }

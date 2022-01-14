@@ -13,20 +13,38 @@ const { resolve } = require('path');
  */
 exports.processProjectGraph = async (graph, context) => {
   const builder = new ProjectGraphBuilder(graph);
+  const projects = context.workspace.projects;
 
-  for (const projectName in context.workspace.projects) {
-    const path = context.workspace.projects[projectName].sourceRoot;
+  for (const projectName in projects) {
+    const path = projects[projectName].sourceRoot;
     const files = await globby('**/*.*', { cwd: path, gitignore: true });
     const json = await convertFiles(path);
 
-    for (const module in json['module']) {
-      const source = resolve(json['module'][module][0].source);
-      const dependency = Object.keys(context.workspace.projects).find(
-        (key) => `/${context.workspace.projects[key].sourceRoot}` === source
-      );
-      
+    Object.values(json['module'] ?? []).forEach((value) =>
+      Object.entries(value).forEach((entry) =>
+        Object.values(entry)
+          .filter((value) => value['source'])
+          .forEach((value) => {
+            const dependency = Object.keys(projects).find(
+              (key) => `/${projects[key].sourceRoot}` === value.source
+            );
+
+            addExplicitDependency(
+              builder,
+              projectName,
+              path,
+              files,
+              dependency
+            );
+          })
+      )
+    );
+
+    Object.keys(json['data']?.terraform_remote_state ?? []).forEach((name) => {
+      const dependency = Object.keys(projects).find((key) => key === name);
+
       addExplicitDependency(builder, projectName, path, files, dependency);
-    }
+    });
   }
 
   return builder.getUpdatedProjectGraph();

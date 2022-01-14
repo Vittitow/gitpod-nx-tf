@@ -1,3 +1,4 @@
+import { convertFiles } from '@cdktf/hcl2json';
 import {
   getProjects,
   formatFiles,
@@ -31,14 +32,15 @@ export default async function (tree: Tree, options: TerraformAppEnvOptions) {
       `Environment: '${options.env}' already exists for app: '${projectConfiguration.name}' `
     );
 
-  generateFiles(
-    tree,
-    joinPathFragments(__dirname, './files'),
-    target,
-    {
-      env: options.env,
-    }
-  );
+  const json = await convertFiles(projectConfiguration.sourceRoot);
+  const variables = Object.keys(json['variable'])
+    .map((variable) => `${variable} = null`)
+    .join('\n');
+
+  generateFiles(tree, joinPathFragments(__dirname, './files'), target, {
+    env: options.env,
+    variables: variables,
+  });
 
   await formatFiles(tree);
 }
