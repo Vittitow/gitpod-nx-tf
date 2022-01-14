@@ -12,12 +12,21 @@ const { resolve } = require('path');
  * @returns {Promise<import('@nrwl/devkit').ProjectGraph>}
  */
 exports.processProjectGraph = async (graph, context) => {
+
+  // Regenerate dependencies on every invocation
+  Object.values(graph.nodes).forEach((value) =>
+    Object.values(value.data.files).forEach((value) => (value.deps = []))
+  );
+  Object.keys(graph.dependencies).forEach(
+    (key) => (graph.dependencies[key] = [])
+  );
+
   const builder = new ProjectGraphBuilder(graph);
   const projects = context.workspace.projects;
 
   for (const projectName in projects) {
     const path = projects[projectName].sourceRoot;
-    const files = await globby('**/*.*', { cwd: path, gitignore: true });
+    const files = await globby('**/*.tf*', { cwd: path, gitignore: true });
     const json = await convertFiles(path);
 
     Object.values(json['module'] ?? []).forEach((value) =>
