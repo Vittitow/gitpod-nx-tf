@@ -11,19 +11,17 @@ import { pathExistsSync, readdirSync } from 'fs-extra';
 export const LARGE_BUFFER = 1024 * 1000000;
 
 export interface TerraformApplyExecutorOptions {
-  environments?: string;
+  environments: string;
 }
 
 export default async function terraformApplyExecutor(
   options: TerraformApplyExecutorOptions,
   context: ExecutorContext
 ) {
-  const projectConfiguration = context.workspace.projects[context.projectName];
+  const projectConfiguration = context.workspace.projects[context.projectName];   
   const applies = getTerraformApplies(
     projectConfiguration,
-    options.environments === undefined
-      ? []
-      : options.environments.split(',').map((environment) => environment.trim())
+    options.environments.split(',').map((environment) => environment.trim())
   );
 
   for (let i = 0; i < applies.length; i++) {
@@ -65,18 +63,6 @@ function getTerraformApplies(
     );
 
     return [];
-  }
-
-  if (environments.length === 0) {
-    logger.debug(
-      `Attempting to apply all environments for app: '${projectConfiguration.name}' as none were specified`
-    );
-
-    environments.push(
-      ...readdirSync(path, { withFileTypes: true })
-        .filter((dirent) => dirent.isDirectory())
-        .map((dirent) => dirent.name)
-    );
   }
 
   const applies: TerraformApply[] = [];

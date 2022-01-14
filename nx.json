@@ -18,17 +18,11 @@
     "default": {
       "runner": "@nrwl/workspace/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e", "plan", "apply"]
+        "cacheableOperations": ["build", "lint", "test", "e2e"]
       }
     }
   },
   "targetDependencies": {
-    "apply": [
-      {
-        "target": "plan",
-        "projects": "self"
-      }
-    ],
     "build": [
       {
         "target": "build",

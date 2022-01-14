@@ -7,5 +7,6 @@
       "type": "string",
       "description": "Name of environment(s) to apply (separated by commas)"
     }
-  }
+  },
+  "required": ["environments"]
 }
