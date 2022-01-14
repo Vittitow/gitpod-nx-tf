@@ -33,7 +33,7 @@ export default async function (tree: Tree, options: TerraformAppEnvOptions) {
     );
 
   const json = await convertFiles(projectConfiguration.sourceRoot);
-  const variables = Object.keys(json['variable'])
+  const variables = Object.keys(json['variable'] ?? [])
     .map((variable) => `${variable} = null`)
     .join('\n');
 

@@ -25,8 +25,9 @@ exports.processProjectGraph = async (graph, context) => {
         Object.values(entry)
           .filter((value) => value['source'])
           .forEach((value) => {
+            const source = resolve(value.source);
             const dependency = Object.keys(projects).find(
-              (key) => `/${projects[key].sourceRoot}` === value.source
+              (key) => `/${projects[key].sourceRoot}` === source
             );
 
             addExplicitDependency(

@@ -1,0 +1,14 @@
+{
+  "name": "littleip",
+  "targets": {
+    "build": {
+      "executor": "./tools/executors:terraform-build"
+    },
+    "lint": {
+      "executor": "./tools/executors:terraform-lint"
+    }
+  },
+  "root": "libs/littleip",
+  "sourceRoot": "libs/littleip/src",
+  "projectType": "library"
+}

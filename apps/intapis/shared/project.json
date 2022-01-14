@@ -1,0 +1,20 @@
+{
+  "name": "intapis-shared",
+  "targets": {
+    "build": {
+      "executor": "./tools/executors:terraform-build"
+    },
+    "lint": {
+      "executor": "./tools/executors:terraform-lint"
+    },
+    "plan": {
+      "executor": "./tools/executors:terraform-plan"
+    },
+    "apply": {
+      "executor": "./tools/executors:terraform-apply"
+    }
+  },
+  "root": "apps/intapis/shared",
+  "sourceRoot": "apps/intapis/shared/src",
+  "projectType": "application"
+}

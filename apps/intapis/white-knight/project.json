@@ -1,0 +1,20 @@
+{
+  "name": "intapis-white-knight",
+  "targets": {
+    "build": {
+      "executor": "./tools/executors:terraform-build"
+    },
+    "lint": {
+      "executor": "./tools/executors:terraform-lint"
+    },
+    "plan": {
+      "executor": "./tools/executors:terraform-plan"
+    },
+    "apply": {
+      "executor": "./tools/executors:terraform-apply"
+    }
+  },
+  "root": "apps/intapis/white-knight",
+  "sourceRoot": "apps/intapis/white-knight/src",
+  "projectType": "application"
+}

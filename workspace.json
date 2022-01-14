@@ -1,4 +1,13 @@
 {
   "version": 2,
-  "projects": {}
+  "projects": {
+    "azurerm": "libs/azurerm",
+    "intapis-core": "apps/intapis/core",
+    "intapis-nciyes": "apps/intapis/nciyes",
+    "intapis-shared": "apps/intapis/shared",
+    "intapis-white-knight": "apps/intapis/white-knight",
+    "littleip": "libs/littleip",
+    "littleip-external": "apps/littleip/external",
+    "littleip-internal": "apps/littleip/internal"
+  }
 }
