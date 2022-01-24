@@ -1,7 +1,3 @@
-# resource "random_pet" "pet" {
-#   length = var.length
-# }
-
-module "azurerm" {
+module "littleip" {
   source = "../../../../libs/littleip/src"
 }

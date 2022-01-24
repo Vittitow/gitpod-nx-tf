@@ -11,7 +11,9 @@ No providers.
 
 ## Modules
 
-No modules.
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_azurerm"></a> [azurerm](#module\_azurerm) | ../../../../libs/azurerm/src | n/a |
 
 ## Resources
 

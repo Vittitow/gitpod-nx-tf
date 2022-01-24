@@ -1,81 +1,71 @@
 // @ts-check
-const { convertFiles } = require('@cdktf/hcl2json');
+const { parse } = require('@cdktf/hcl2json');
 const { ProjectGraphBuilder, joinPathFragments } = require('@nrwl/devkit');
 const globby = require('globby');
 const { resolve } = require('path');
+const { readFile } = require('fs-extra');
 
 /**
- * Nx Project Graph plugin for tf
+ * Nx Project Graph plugin for terraform
  *
  * @param {import('@nrwl/devkit').ProjectGraph} graph
  * @param {import('@nrwl/devkit').ProjectGraphProcessorContext} context
  * @returns {Promise<import('@nrwl/devkit').ProjectGraph>}
  */
 exports.processProjectGraph = async (graph, context) => {
-
-  // Regenerate dependencies on every invocation
-  Object.values(graph.nodes).forEach((value) =>
-    Object.values(value.data.files).forEach((value) => (value.deps = []))
-  );
-  Object.keys(graph.dependencies).forEach(
-    (key) => (graph.dependencies[key] = [])
-  );
-
   const builder = new ProjectGraphBuilder(graph);
   const projects = context.workspace.projects;
 
-  for (const projectName in projects) {
-    const path = projects[projectName].sourceRoot;
-    const files = await globby('**/*.tf*', { cwd: path, gitignore: true });
-    const json = await convertFiles(path);
+  await Promise.all(
+    Object.entries(projects).map(async ([name, project]) => {
+      try {
+        for await (const file of globby.stream('**/*.tf*', {
+          cwd: project.root,
+          gitignore: true,
+        })) {
+          const hcl = await readFile(resolve(project.root, file.toString()));
+          const json = await parse(file.toString(), hcl.toString());
 
-    Object.values(json['module'] ?? []).forEach((value) =>
-      Object.entries(value).forEach((entry) =>
-        Object.values(entry)
-          .filter((value) => value['source'])
-          .forEach((value) => {
-            const source = resolve(value.source);
-            const dependency = Object.keys(projects).find(
-              (key) => `/${projects[key].sourceRoot}` === source
+          Object.values(json.module ?? []).forEach((module) => {
+            Object.values(module.filter((input) => input.source)).forEach(
+              (input) => {
+                const source = resolve(project.sourceRoot, input.source);
+                const dependency = Object.keys(projects).find(
+                  (key) => resolve(projects[key].sourceRoot) === source
+                );
+
+                if (dependency)
+                  builder.addExplicitDependency(
+                    name,
+                    joinPathFragments(project.root, file.toString()),
+                    dependency
+                  );
+              }
             );
+          });
 
-            addExplicitDependency(
-              builder,
-              projectName,
-              path,
-              files,
-              dependency
-            );
-          })
-      )
-    );
+          Object.keys(json.data?.terraform_remote_state ?? []).forEach(
+            (state) => {
+              const dependency = Object.keys(projects).find(
+                (key) => key === state.replace('_', '-')
+              );
 
-    Object.keys(json['data']?.terraform_remote_state ?? []).forEach((name) => {
-      const dependency = Object.keys(projects).find((key) => key === name);
-
-      addExplicitDependency(builder, projectName, path, files, dependency);
-    });
-  }
+              if (dependency)
+                builder.addExplicitDependency(
+                  name,
+                  joinPathFragments(project.root, file.toString()),
+                  dependency
+                );
+            }
+          );
+        }
+      } catch (e) {
+        console.warn(
+          `nx-terraform encountered an error parsing dependencies for ${name}:\n${e}`,
+        );
+      }
+    })
+  );
 
   return builder.getUpdatedProjectGraph();
 };
-
-/**
- * @param {import('@nrwl/devkit').ProjectGraphBuilder} builder
- * @param {string} projectName
- * @param {string} path
- * @param {string[]} files
- * @param {string} dependency
- * @returns {void}
- */
-function addExplicitDependency(builder, projectName, path, files, dependency) {
-  if (dependency === undefined) return;
-
-  for (let i = 0; i < files.length; i++) {
-    builder.addExplicitDependency(
-      projectName,
-      joinPathFragments(path, files[i]),
-      dependency
-    );
-  }
-}

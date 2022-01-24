@@ -1,8 +1,4 @@
-# resource "random_pet" "pet" {
-#   length = var.length
-# }
-
-data "terraform_remote_state" "intapis-shared" {
+data "terraform_remote_state" "intapis_shared" {
   backend = "azurerm"
 
   config = {
@@ -13,7 +9,7 @@ data "terraform_remote_state" "intapis-shared" {
   }
 }
 
-data "terraform_remote_state" "intapis-core" {
+data "terraform_remote_state" "intapis_core" {
   backend = "azurerm"
 
   config = {

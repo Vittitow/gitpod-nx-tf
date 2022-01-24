@@ -13,7 +13,7 @@ No providers.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_azurerm"></a> [azurerm](#module\_azurerm) | ../../../../libs/littleip/src | n/a |
+| <a name="module_littleip"></a> [littleip](#module\_littleip) | ../../../../libs/littleip/src | n/a |
 
 ## Resources
 
