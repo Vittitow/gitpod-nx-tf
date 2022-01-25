@@ -1,101 +1,111 @@
 
 
-# Tf
+# Nx Terraform
+### Extends the nx project graph to detect dependencies between terraform hcl code projects. Additionally adds custom workspace generators and executors to streamline monorepo development of terraform modules.
+&nbsp;
 
-This project was generated using [Nx](https://nx.dev).
+# Workspace Generators
 
-<p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="450"></p>
+## Terraform App
+```bash
+nx workspace-generator terraform-app myapp # Optional flag: --dry-run to see output without actually creating app
 
-🔎 **Smart, Fast and Extensible Build System**
+CREATE apps/myapp/project.json
+UPDATE workspace.json
+CREATE apps/myapp/src/.terraform-docs.yml
+CREATE apps/myapp/src/.tflint.hcl
+CREATE apps/myapp/src/main.tf
+CREATE apps/myapp/src/outputs.tf
+CREATE apps/myapp/src/variables.tf
+CREATE apps/myapp/src/versions.tf
+CREATE apps/myapp/src/backends.tf
+CREATE apps/myapp/src/providers.tf
+```
 
-## Adding capabilities to your workspace
+## Terraform App Env
+```bash
+nx workspace-generator terraform-app-env myapp myenv # Optional flag: --dry-run to see output without actually creating app-env
 
-Nx supports many plugins which add capabilities for developing different types of applications and different tools.
+CREATE apps/myapp/env/myenv/.env
+CREATE apps/myapp/env/myenv/myenv.auto.tfvars
+```
 
-These capabilities include generating applications, libraries, etc as well as the devtools to test, and build projects as well.
+## Terraform Lib
+```bash
+nx workspace-generator terraform-lib mylib # Optional flag: --dry-run to see output without actually creating lib
 
-Below are our core plugins:
+CREATE libs/mylib/project.json
+UPDATE workspace.json
+CREATE libs/mylib/src/.terraform-docs.yml
+CREATE libs/mylib/src/.tflint.hcl
+CREATE libs/mylib/src/main.tf
+CREATE libs/mylib/src/outputs.tf
+CREATE libs/mylib/src/variables.tf
+CREATE libs/mylib/src/versions.tf
+```
 
-- [React](https://reactjs.org)
-  - `npm install --save-dev @nrwl/react`
-- Web (no framework frontends)
-  - `npm install --save-dev @nrwl/web`
-- [Angular](https://angular.io)
-  - `npm install --save-dev @nrwl/angular`
-- [Nest](https://nestjs.com)
-  - `npm install --save-dev @nrwl/nest`
-- [Express](https://expressjs.com)
-  - `npm install --save-dev @nrwl/express`
-- [Node](https://nodejs.org)
-  - `npm install --save-dev @nrwl/node`
+# Workspace Executors
 
-There are also many [community plugins](https://nx.dev/community) you could add.
+## Lint
+```bash
+nx lint app1 # Optional flag: --skip-nx-cache to bypass cache
+nx run app1:lint # Optional flag: --skip-nx-cache to bypass cache
+nx affected:lint
+```
 
-## Generate an application
-
-Run `nx g @nrwl/react:app my-app` to generate an application.
-
-> You can use any of the plugins above to generate applications as well.
-
-When using Nx, you can create multiple applications and libraries in the same workspace.
-
-## Generate a library
-
-Run `nx g @nrwl/react:lib my-lib` to generate a library.
-
-> You can also use any of the plugins above to generate libraries as well.
-
-Libraries are shareable across libraries and applications. They can be imported from `@tf/mylib`.
-
-## Development server
-
-Run `nx serve my-app` for a dev server. Navigate to http://localhost:4200/. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `nx g @nrwl/react:component my-component --project=my-app` to generate a new component.
+ - Runs `terraform fmt -recursive` to formate terraform code properly
+ - Runs `tflint init && tflint` to install tflint plugins and perform linting
+ - Runs `terraform-docs .` to generate up to date documentation on the terraform code
 
 ## Build
+```bash
+nx build app1 # Optional flags: --skip-nx-cache to bypass cache and --environments=myenv to build specific environment(s)
+nx run app1:build # Optional flags: --skip-nx-cache to bypass cache and --environments=myenv to build specific environment(s)
+nx affected:build
+```
 
-Run `nx build my-app` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+- Iterates through each environment performing the following:
+    - Copies all files to a dist folder and uses ejs to generate values
+    - Runs `tfenv install min-required && tfenv use min-required` to utilize the correct terraform version
+    - Runs `terraform init -backend=false && terraform validate` to validate the terraform code
+    - Runs `tfsec --tfvars-file=` to perform static code analysis
 
-## Running unit tests
+## Plan
+```bash
+nx plan app1 # Optional flags: --skip-nx-cache to bypass cache and --environments=myenv to plan specific environment(s)
+nx run app1:plan # Optional flags: --skip-nx-cache to bypass cache and --environments=myenv to plan specific environment(s)
+nx affected:plan
+```
 
-Run `nx test my-app` to execute the unit tests via [Jest](https://jestjs.io).
+- Iterates through each environment performing the following:
+    - Runs `tfenv install min-required && tfenv use min-required` to utilize the correct terraform version
+    - Runs `terraform init && terraform plan -out=terraform.tfplan` to plan the terraform code and output the plan file
 
-Run `nx affected:test` to execute the unit tests affected by a change.
+## Apply
+```bash
+nx apply app1 --environments=myenv # Optional flag: --skip-nx-cache to bypass cache
+nx run app1:apply --environments=myenv # Optional flag: --skip-nx-cache to bypass cache
+nx affected:apply --environments=myenv
+```
 
-## Running end-to-end tests
+- Iterates through each environment performing the following:
+    - Runs `tfenv install min-required && tfenv use min-required` to utilize the correct terraform version
+    - Runs `terraform init && terraform apply -input=false terraform.tfplan` to apply the output plan taking no input
 
-Run `ng e2e my-app` to execute the end-to-end tests via [Cypress](https://www.cypress.io).
+# Additional Commands
 
-Run `nx affected:e2e` to execute the end-to-end tests affected by a change.
+## Graph
+```bash
+nx graph
+nx graph --watch # Updates the browser as code is changed
+nx affected:graph # Highlights projects which may have changed in behavior
+```
 
-## Understand your workspace
+## Run Many
+```bash
+nx run-many --target=build --projects=app1,app2
+nx run-many --target=lint --all # Runs all projects that have a test target, use this sparingly.
+```
 
-Run `nx dep-graph` to see a diagram of the dependencies of your projects.
-
-## Further help
-
-Visit the [Nx Documentation](https://nx.dev) to learn more.
-
-
-
-## ☁ Nx Cloud
-
-### Distributed Computation Caching & Distributed Task Execution
-
-<p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-cloud-card.png"></p>
-
-Nx Cloud pairs with Nx in order to enable you to build and test code more rapidly, by up to 10 times. Even teams that are new to Nx can connect to Nx Cloud and start saving time instantly.
-
-Teams using Nx gain the advantage of building full-stack applications with their preferred framework alongside Nx’s advanced code generation and project dependency graph, plus a unified experience for both frontend and backend developers.
-
-Visit [Nx Cloud](https://nx.app/) to learn more.
-
-`nx generate @nrwl/workspace:workspace-generator my-generator`
-`npx tsc tools/executors/tfplan/index`
-`nx workspace-generator tf-app myapp`
-`nx workspace-generator tf-lib mylib`
-`nx dep-graph`
+# Gitpod
 `https://gitpod.io/#https://github.com/Vittitow/gitpod-nx-tf`
