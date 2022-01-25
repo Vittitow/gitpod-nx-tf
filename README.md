@@ -1,6 +1,8 @@
 
 
 # Nx Terraform
+[<img src="https://gitpod.io/button/open-in-gitpod.svg">](https://gitpod.io/#https://github.com/Vittitow/gitpod-nx-tf)
+
 ### Extends the nx project graph to detect dependencies between terraform hcl code projects. Additionally adds custom workspace generators and executors to streamline monorepo development of terraform modules.
 &nbsp;
 
@@ -106,6 +108,3 @@ nx affected:graph # Highlights projects which may have changed in behavior
 nx run-many --target=build --projects=app1,app2
 nx run-many --target=lint --all # Runs all projects that have a test target, use this sparingly.
 ```
-
-# Gitpod
-`https://gitpod.io/#https://github.com/Vittitow/gitpod-nx-tf`
